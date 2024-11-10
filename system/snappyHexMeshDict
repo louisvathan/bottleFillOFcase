@@ -1,0 +1,109 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+castellatedMesh true;
+snap            true;
+addLayers       false;
+geometry
+{
+    inlet.stl       {type triSurfaceMesh; name inlet;}
+    atmosphere.stl       {type triSurfaceMesh; name atmosphere;}
+    bottle.stl       {type triSurfaceMesh; name bottle;}
+}
+castellatedMeshControls
+{
+    maxLocalCells 12000000;
+    maxGlobalCells 12000000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 3;
+    resolveFeatureAngle 30;
+    allowFreeStandingZoneFaces true;
+    features
+    (
+        {file "inlet.eMesh";       level 2;}
+        {file "atmosphere.eMesh";       level 1;}
+        {file "bottle.eMesh";       level 1;}
+    );
+    refinementSurfaces
+    {
+        inlet {level (2 2); patchInfo{type wall;}}
+        atmosphere {level (1 1); patchInfo{type wall;}}
+        bottle {level (1 1); patchInfo{type wall;}}
+    }
+    refinementRegions
+    {
+    }
+    locationInMesh (0.001 0.1 0.0001); 
+}
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;
+    nFeatureSnapIter 10;
+    implicitFeatureSnap true;
+    explicitFeatureSnap false;
+    multiRegionFeatureSnap true;
+    detectNearSurfacesSnap true;
+}
+addLayersControls
+{
+    relativeSizes true;
+    layers
+    {
+        // "*"
+        // {
+        //     nSurfaceLayers 2;
+        // }
+    }
+    relativeSizes       true;
+    expansionRatio      1.1;
+    finalLayerThickness 0.01;
+    minThickness        0.05;
+    nGrow 0;
+    featureAngle 180;
+    maxFaceThicknessRatio 0.5;
+    nSmoothSurfaceNormals 1;
+    nSmoothThickness 10;
+    minMedianAxisAngle 90;
+    maxThicknessToMedialRatio 0.3;
+    nSmoothNormals 3;
+    slipFeatureAngle 30;
+    nRelaxIter 5;
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+    nRelaxedIter 20;
+    minMedialAxisAngle 90;
+}
+meshQualityControls
+{
+    #include "meshQualityDict"
+    nSmoothScale 4;
+    errorReduction 0.75;
+    relaxed
+    {
+        maxNonOrtho 75;
+    }
+}
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+mergeTolerance 1e-6;
+// ************************************************************************* //
