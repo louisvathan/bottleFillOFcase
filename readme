@@ -1,0 +1,5 @@
+This transient CFD simulation is done using interFoam solver in OpenFOAM. Post-processing and rendering are done using ParaView software.
+
+I used k-OmegaSST turbulence model for this simulation with an overall cell count of 143.5 K. Mesh is done using the snappyHexMesh utility.
+
+The water inlet flow is set to 2.189 m/s.
